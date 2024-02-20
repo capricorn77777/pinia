@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {inject} from "vue";
 import {RouterLink} from "vue-router";
 import type {Member} from "@/interfaces";
 import { useMembersStore } from "@/stores/member";

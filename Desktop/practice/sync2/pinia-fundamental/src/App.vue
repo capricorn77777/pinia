@@ -1,21 +1,3 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import {reactive, provide} from "vue";
-import type {Member} from "@/interfaces";
-import { useMembersStore } from '@/stores/member';
-
-const memberStore = useMembersStore();
-memberStore.initList();
-
-const memberList = new Map<number, Member>();
-memberList.set(33456, {id: 33456, name: "田中太郎", email: "bow@example.com", points: 35,
-note: "初回入会特典あり。"});
-memberList.set(47783, {id: 47783, name: "田中太郎２", email: "bow2@example.com", points: 53
-});
-provide("memberList", reactive(memberList));
-</script>
-
 <template>
   <header>
     <h1>piniaサンプル</h1>
