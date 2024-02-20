@@ -2,8 +2,10 @@
 import {inject, reactive} from "vue";
 import {RouterLink, useRouter} from "vue-router";
 import type {Member} from "@/interfaces";
+import { useMembersStore } from "@/stores/member";
 
 const router = useRouter();
+const membersStore = useMembersStore();
 const memberList = inject("memberList") as Map<number, Member>;
 const member: Member = reactive(
     {
@@ -16,7 +18,7 @@ const member: Member = reactive(
 );
 const onAdd = (): void => {
     console.log(member);
-    memberList.set(member.id, member);
+    membersStore.addMember(member);
     router.push({name: "MemberList"});
 };
 
