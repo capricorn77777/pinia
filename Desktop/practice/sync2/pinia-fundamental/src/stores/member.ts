@@ -3,6 +3,7 @@ import type {Member} from "@/interfaces";
 
 interface State {
     memberList: Map<number, Member>;
+    isLoading: boolean;
 }
 let _database: IDBDatabase;
 async function getDatabase(): Promise<IDBDatabase> {
@@ -37,7 +38,8 @@ export const useMembersStore = defineStore({
     id: "members",
     state: (): State=> {
         return {
-            memberList: new Map<number, Member>()
+            memberList: new Map<number, Member>(),
+            isLoading: true
         };
     },
     getters: {
