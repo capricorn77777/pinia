@@ -34,5 +34,10 @@ export const useMembersStore = defineStore({
 
             this.memberList = memberList;
         },
+        insertMember(member: Member): void{
+            this.memberList.set(member.id, member);
+            const memberListJSONStr = JSON.stringify([...this.memberList]);
+            sessionStorage.setItem("memberList", memberListJSONStr);
+        }
     }
 })
