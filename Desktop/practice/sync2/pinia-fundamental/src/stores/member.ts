@@ -8,6 +8,11 @@ async function getDatabase(): Promise<IDBDatabase> {
     const promise = new Promise<IDBDatabase>(
         (resolve, reject): void => {
             const request = window.indexedDB.open("asyncdb", 1);
+            request.onupgradeneeded = (event) => {
+                const target = event.target as IDBRequest;
+                const database = target.result as IDBDatabase;
+                database.createObjectStore("members", {keyPath: "id"});
+            }
             
             request.onsuccess = (event) => {
                 const target = event.target as IDBRequest;
