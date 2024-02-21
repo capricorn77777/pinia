@@ -17,9 +17,19 @@ const member: Member = reactive(
     }
 );
 const onAdd = (): void => {
-    console.log(member);
-    membersStore.insertMember(member);
-    router.push({name: "MemberList"});
+    const promise = membersStore.insertMember(member);
+    promise.then(
+        (result: boolean) => {
+            if(result) {
+                router.push({name: "MemberList"});
+            }
+        }
+    );
+    promise.catch(
+        (error) => {
+            console.log('データ登録失敗', error);
+        }
+    );
 };
 
 
