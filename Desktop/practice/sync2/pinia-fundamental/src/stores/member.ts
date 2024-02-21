@@ -16,7 +16,7 @@ async function getDatabase(): Promise<IDBDatabase> {
             request.onupgradeneeded = (event) => {
                 const target = event.target as IDBRequest;
                 _database = target.result as IDBDatabase;
-                resolve(_database);
+                _database.createObjectStore("members", {keyPath: "id"});
             }
             
             request.onsuccess = (event) => {
@@ -97,6 +97,7 @@ export const useMembersStore = defineStore({
             };
 
             const database = await getDatabase();
+     
             const promise = new Promise<boolean>(
                 (resolve, reject) => {
                     const transaction = database.transaction("members", "readwrite");
