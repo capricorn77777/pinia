@@ -39,7 +39,7 @@ export const useMembersStore = defineStore({
     state: (): State=> {
         return {
             memberList: new Map<number, Member>(),
-            isLoading: true
+            isLoading: false
         };
     },
     getters: {
@@ -62,6 +62,7 @@ export const useMembersStore = defineStore({
                     const objectStore = transaction.objectStore("members");
                     const memberList = new Map<number, Member>();
                     const request = objectStore.openCursor();
+                    
                     request.onsuccess = (event) => {
                         const target = event.target as IDBRequest;
                         const cursor = target.result as IDBCursorWithValue;
@@ -83,7 +84,8 @@ export const useMembersStore = defineStore({
                     };
 
                     transaction.onerror = (event) => {
-                        console.log("ERROR: データ取得に失敗");
+                        console.log("ERROR: データ取得に失敗", event);
+                        reject(new Error("ERROR:データ取得に失敗"));
                     };
                 }
             );
