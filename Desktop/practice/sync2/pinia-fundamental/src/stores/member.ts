@@ -97,10 +97,10 @@ export const useMembersStore = defineStore({
             };
 
             const database = await getDatabase();
-            const promise = new Promise<boolean>{
+            const promise = new Promise<boolean>(
                 (resolve, reject) => {
                     const transaction = database.transaction("members", "readwrite");
-                    const objectStore = transation.objectStore("members");
+                    const objectStore = transaction.objectStore("members");
 
                     objectStore.put(memberAdd);
 
@@ -111,12 +111,11 @@ export const useMembersStore = defineStore({
                     transaction.onerror = (event) => {
                         console.log("ERROR データ登録に失敗", event);
                         reject(new Error("ERROR データ登録に失敗"));
-                    }
+                    };
                 }
-            }
-            this.memberList.set(member.id, member);
-            const memberListJSONStr = JSON.stringify([...this.memberList]);
-            sessionStorage.setItem("memberList", memberListJSONStr);
-        }
+            );
+            return promise;
+        },  
+        
     }
 })
