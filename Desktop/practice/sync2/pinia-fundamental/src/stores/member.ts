@@ -11,24 +11,40 @@ async function getDatabase(): Promise<IDBDatabase> {
         (resolve, reject): void => {
             if(_database != undefined){
                 resolve(_database);
-            }
-            const request = window.indexedDB.open("asyncdb", 1);
-            request.onupgradeneeded = (event) => {
-                const target = event.target as IDBRequest;
-                _database = target.result as IDBDatabase;
-                _database.createObjectStore("members", {keyPath: "id"});
-            }
             
-            request.onsuccess = (event) => {
-                const target = event.target as IDBRequest;
-                const _database = target.result as IDBDatabase;
-                resolve(_database);
-            };
-        
-            request.onerror = (event) => {
-                console.log("ERROR: DBをオープンできません", event);
-                reject(new Error("ERROR: DBをオープンできません"));
-            };
+            }
+            else{
+            
+                const request = window.indexedDB.open("asyncdb", 1);
+                request.onupgradeneeded = (event) => {
+                    const target = event.target as IDBRequest;
+                    const database = target.result as IDBDatabase;
+                    database.createObjectStore("members", {keyPath: "id"});
+                }
+                
+                request.onsuccess = (event) => {
+                    const target = event.target as IDBRequest;
+                    _database = target.result as IDBDatabase;
+                    
+                    console.log("データベースオブジェクト:", _database); 
+                    resolve(_database);
+                    setupObjectStore(_database);
+                   
+                  
+                };
+            
+                request.onerror = (event) => {
+                    console.log("ERROR: DBをオープンできません", event);
+                    reject(new Error("ERROR: DBをオープンできません"));
+                };
+
+                function setupObjectStore(database: IDBDatabase) {
+                    const transaction = database.transaction(["members"], "readwrite");
+                    const objectStore = transaction.objectStore("members");
+                }
+
+               
+            }
         }
     );
     return promise;
@@ -55,10 +71,12 @@ export const useMembersStore = defineStore({
     },
     actions: {
         async prepareMemberList(): Promise<boolean>{
-            const database = await getDatabase();
+            
+            const db = await getDatabase();
             const promise = new Promise<boolean>(
                 (resolve,reject) => {
-                    const transaction = database.transaction("members", "readonly");
+                   
+                    const transaction = db.transaction("members", "readonly");
                     const objectStore = transaction.objectStore("members");
                     const memberList = new Map<number, Member>();
                     const request = objectStore.openCursor();
@@ -66,6 +84,8 @@ export const useMembersStore = defineStore({
                     request.onsuccess = (event) => {
                         const target = event.target as IDBRequest;
                         const cursor = target.result as IDBCursorWithValue;
+
+                        
 
                         if(cursor) {
                             const id = cursor.key as number;
@@ -92,11 +112,13 @@ export const useMembersStore = defineStore({
             return promise;
         },
         async insertMember(member: Member): Promise<boolean>{
+            
+            const database = await getDatabase();
             const memberAdd: Member = {
                 ...member
             };
 
-            const database = await getDatabase();
+            
      
             const promise = new Promise<boolean>(
                 (resolve, reject) => {
