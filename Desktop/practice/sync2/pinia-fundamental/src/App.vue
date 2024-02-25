@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>piniaサンプル</h1>
+    <h1>webアクセスサンプル</h1>
   </header>
   <main>
     <RouterView />
