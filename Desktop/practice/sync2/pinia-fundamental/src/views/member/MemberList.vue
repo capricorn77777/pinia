@@ -5,6 +5,7 @@ import type {Member} from "@/interfaces";
 import { useMembersStore } from "@/stores/member";
 
 const membersStore = useMembersStore();
+
 membersStore.prepareMemberList();
 
 const memberList = computed(

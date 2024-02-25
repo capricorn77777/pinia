@@ -2,7 +2,7 @@
 import { VueElement } from 'vue';
 import {computed} from 'vue';
 import {RouterLink} from 'vue-router';
-import {useWeatherSrore} from "@/stores/weather";
+import {useWeatherStore} from "@/stores/weather";
 import type {City} from "@/stores/weather";
 
 const weatherStore = useWeatherStore();
@@ -20,7 +20,8 @@ const cityList = computed(
         <li
             v-for="[id, city] in cityList"
             v-vind:key="id">
-        <RouterLink v-bind:to="{name: 'weatherInfo', params: {id: id}}"></RouterLink>
+        <RouterLink v-bind:to="{name: 'weatherInfo', params: {id: id}}">
+        {{ city.name }}の天気</RouterLink>
         </li>
     </ul>
 </template>
