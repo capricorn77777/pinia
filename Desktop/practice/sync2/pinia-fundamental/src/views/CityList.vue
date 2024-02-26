@@ -20,7 +20,7 @@ const cityList = computed(
         <li
             v-for="[id, city] in cityList"
             v-vind:key="id">
-        <RouterLink v-bind:to="{name: 'weatherInfo', params: {id: id}}">
+        <RouterLink v-bind:to="{name: 'WeatherInfo', params: {id: id}}">
         {{ city.name }}の天気</RouterLink>
         </li>
     </ul>

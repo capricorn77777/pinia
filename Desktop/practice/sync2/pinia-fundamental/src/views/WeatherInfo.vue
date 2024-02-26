@@ -11,7 +11,7 @@ const props = defineProps<Props>();
 
 const weatherStore = useWeatherStore(); 
 weatherStore.recieveWeatherInfo(props.id);
-const isLoadnig = computed(
+const isLoading = computed(
     (): boolean => {
         return weatherStore.isLoading;
     }

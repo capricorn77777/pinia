@@ -12,6 +12,15 @@ interface State {
     weatherDescription: string;
 }
 
+function setupOnUpgradeNeeded(database: IDBDatabase) {
+    request.onupgradeneeded = (event) => {
+        const target = event.target as IDBRequest;
+        const db = target.result as IDBDatabase;
+        console.log("Creating object store...");
+        db.createObjectStore("members", { keyPath: "id" });
+    }
+}
+
 export const useWeatherStore = defineStore({
     id: "weather",
     state: (): State => {
@@ -20,7 +29,7 @@ export const useWeatherStore = defineStore({
             selectedCity: {
                 name: "",
                 q: ""
-            }
+            },
             isLoading: true,
             weatherDescription: ""
         };
@@ -40,7 +49,7 @@ export const useWeatherStore = defineStore({
                 name: "神戸",
                 q: "Kobe"
             });
-            this.cityList.set("Kobe",
+            this.cityList.set("Himeji",
             {
                 name: "姫路",
                 q: "Himeji"
@@ -49,6 +58,29 @@ export const useWeatherStore = defineStore({
         async recieveWeatherInfo(id: string) {
             this.selectedCity = this.cityList.get(id) as City;
             //ウェブアクセスコード
+            const WeatherInfoUrl = "http:/api.openweathermap.org/data/2.5/weather";
+            //クエリパラメーターのもととなるオブジェクトリテラルを用意
+            const params:{
+                lang: string,
+                q: string,
+                appId: string
+            } =
+            {
+                lang:"ja",
+                q: this.selectedCity.q,
+                appId: "b3dd577445b2202221b6a7bf0a2cf127"
+            }
+
+            const queryParams = new URLSearchParams(params);
+            const urlFull = `${WeatherInfoUrl}?${queryParams}`;
+            const response = await fetch(urlFull);
+            const weatherInfoJSON = await response.json();
+            //
+            const weatherArray = weatherInfoJSON.weather;
+            const weather = weatherArray[0];
+            this.weatherDescription = weather.description;
+
+            this.isLoading = false;
         }      
     }
 
