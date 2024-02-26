@@ -12,14 +12,7 @@ interface State {
     weatherDescription: string;
 }
 
-function setupOnUpgradeNeeded(database: IDBDatabase) {
-    request.onupgradeneeded = (event) => {
-        const target = event.target as IDBRequest;
-        const db = target.result as IDBDatabase;
-        console.log("Creating object store...");
-        db.createObjectStore("members", { keyPath: "id" });
-    }
-}
+
 
 export const useWeatherStore = defineStore({
     id: "weather",
@@ -58,7 +51,7 @@ export const useWeatherStore = defineStore({
         async recieveWeatherInfo(id: string) {
             this.selectedCity = this.cityList.get(id) as City;
             //ウェブアクセスコード
-            const WeatherInfoUrl = "http:/api.openweathermap.org/data/2.5/weather";
+            const WeatherInfoUrl = "http://api.openweathermap.org/data/2.5/weather";
             //クエリパラメーターのもととなるオブジェクトリテラルを用意
             const params:{
                 lang: string,
